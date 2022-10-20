@@ -1,0 +1,604 @@
+openapi: 3.0.2
+info:
+  title: HyperProf
+  description: API para gerenciamento de professores e aulas particulares
+  version: 1.0.0
+  contact:
+    name: TreinaWeb
+    url: https://www.treinaweb.com.br/contato
+    email: contato@treinaweb.com.br
+servers:
+  - url: http://localhost:8081
+    description: Servidor local
+tags:
+  - name: Me
+    description: Informações do usuário autenticado
+  - name: Auth
+    description: Autenticação
+  - name: Alunos
+    description: Gerenciamento de alunos
+  - name: Professores
+    description: Gerenciamento de professores
+paths:
+  /api/me:
+    get:
+      tags:
+        - Me
+      summary: Informações do usuário autenticado
+      operationId: me
+      responses:
+        "200":
+          description: Usuário autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfessorResponse"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - JWT: []
+  /api/professores:
+    get:
+      tags:
+        - Professores
+      summary: Lista todos os professores
+      description: Lista todos os professores cadastrados
+      operationId: listarProfessores
+      parameters:
+        - name: q
+          in: query
+          description: Termo de busca para a descrição do professor
+          required: false
+          schema:
+            type: string
+            example: Matemática
+      responses:
+        "200":
+          description: Lista de professores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProfessorResponse"
+    post:
+      operationId: cadastrarProfessor
+      tags:
+        - Professores
+      description: Cadastra um professor
+      summary: Cadastra um professor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfessorRequest"
+      responses:
+        "201":
+          description: Professor cadastrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfessorResponse"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+    put:
+      operationId: atualizarProfessor
+      tags:
+        - Professores
+      description: Atualiza o professor logado
+      summary: Atualiza o professor logado
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfessorRequest"
+      responses:
+        "200":
+          description: Professor atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - JWT: []
+    delete:
+      operationId: excluirProfessor
+      tags:
+        - Professores
+      description: Exclui o professor logado
+      summary: Exclui o professor logado
+      responses:
+        "204":
+          description: Professor excluído com sucesso
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - JWT: []
+  /api/professores/foto:
+    post:
+      operationId: atualizarFotoProfessor
+      tags:
+        - Professores
+      description: Atualiza a foto de perfil do professor logado
+      summary: Atualiza a foto de perfil do professor logado
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                foto:
+                  type: string
+                  format: binary
+              required:
+                - foto
+      responses:
+        "200":
+          description: Foto atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Acesso negado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - JWT: []
+  /api/professores/alunos:
+    get:
+      operationId: listarAlunos
+      tags:
+        - Alunos
+      description: Lista os alunos do professor logado
+      summary: Lista os alunos do professor logado
+      responses:
+        "200":
+          description: Alunos listados com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlunoResponse"
+        "401":
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      security:
+        - JWT: []
+  /api/professores/{professor_id}:
+    get:
+      operationId: detalharProfessor
+      tags:
+        - Professores
+      description: Detalha um professor
+      summary: Detalha um professor
+      parameters:
+        - name: professor_id
+          in: path
+          description: ID do professor
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Professor detalhado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfessorResponse"
+        "404":
+          description: Professor não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/professores/{professor_id}/alunos:
+    post:
+      operationId: cadastrarAluno
+      tags:
+        - Alunos
+      description: Cadastra um aluno
+      summary: Cadastra um aluno
+      parameters:
+        - name: professor_id
+          in: path
+          description: ID do professor
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlunoRequest"
+      responses:
+        "201":
+          description: Aluno cadastrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "404":
+          description: Professor não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/auth/login:
+    post:
+      operationId: login
+      tags:
+        - Auth
+      description: Autentica um usuário
+      summary: Autentica um usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+              example:
+                status: 400
+                timestamp: 2020-11-23T20:00:00.000+00:00
+                message: Erro de validação
+                error: Bad Request
+                cause: ValidationException
+                errors:
+                  email: [deve ser um endereço de e-mail válido]
+                  password: [é obrigatório]
+        "401":
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/auth/refresh:
+    post:
+      operationId: refreshToken
+      tags:
+        - Auth
+      description: Reautentica um usuário
+      summary: Reautentica um usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequest"
+      responses:
+        "200":
+          description: Reautenticação realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+              example:
+                status: 400
+                timestamp: 2020-11-23T20:00:00.000+00:00
+                message: Erro de validação
+                error: Bad Request
+                cause: ValidationException
+                errors:
+                  refresh_token: [é obrigatório]
+        "401":
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/auth/logout:
+    post:
+      operationId: logout
+      tags:
+        - Auth
+      description: Desautentica um usuário
+      summary: Desautentica um usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequest"
+      responses:
+        "205":
+          description: Logout realizado com sucesso
+      security:
+        - JWT: []
+components:
+  schemas:
+    AlunoRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+          minLength: 3
+          maxLength: 255
+          example: João da Silva
+        email:
+          type: string
+          format: email
+          minLength: 3
+          maximum: 255
+          example: joao@mail.com
+        data_aula:
+          type: string
+          format: date-time
+          example: 2020-10-11T10:00:00.000Z
+      required:
+        - nome
+        - email
+        - data_aula
+    AlunoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        nome:
+          type: string
+          example: João da Silva
+        email:
+          type: string
+          format: email
+          example: joao@mail.com
+        data_aula:
+          type: string
+          format: date-time
+          example: 2020-10-11T10:00:00.000Z
+        created_at:
+          type: string
+          format: date-time
+          example: 2020-10-10T00:00:00.000Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2020-10-10T00:00:00.000Z
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 401
+        timestamp:
+          type: string
+          format: date-time
+          example: 2020-10-10T00:00:00.000Z
+        message:
+          type: string
+          example: Credenciais inválidas
+        error:
+          type: string
+          example: Unauthorized
+        cause:
+          type: string
+          example: InvalidCredentialsException
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          example: joao@mail.com
+        password:
+          type: string
+          format: password
+          minLength: 6
+          maxLength: 255
+          example: senha@123
+      required:
+        - email
+        - password
+    ValidationErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 400
+        timestamp:
+          type: string
+          format: date-time
+          example: 2020-10-10T00:00:00.000Z
+        message:
+          type: string
+          example: Erro de validação
+        error:
+          type: string
+          example: Bad Request
+        cause:
+          type: string
+          example: ValidationException
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              example: Campo obrigatório
+          example:
+            nome: [é obrigatório]
+            email: [deve ser um endereço de e-mail válido]
+            data_aula: [não pode estar no passado]
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token de acesso
+          example: 303Xs5g4co7glr4xtJHXHvbNI4Pl0y1hgyZZWOENHMx
+        refresh_token:
+          type: string
+          description: Token de atualização
+          example: 303Xs5g4co7glr4xtJHXHvbNI4Pl0y1hgyZZWOENHMx
+    ProfessorResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        nome:
+          type: string
+          example: João da Silva
+        email:
+          type: string
+          format: email
+          example: joao@mail.com
+        idade:
+          type: integer
+          format: int32
+          example: 30
+        descricao:
+          type: string
+          example: Professor de matemática
+        valor_hora:
+          type: number
+          format: float
+          example: 50.5
+        foto_perfil:
+          type: string
+          format: uri
+          example: https://www.example.com/foto-perfil.jpg
+        created_at:
+          type: string
+          format: date-time
+          example: 2020-10-10T00:00:00.000Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2020-10-10T00:00:00.000Z
+    ProfessorRequest:
+      type: object
+      required:
+        - nome
+        - email
+        - idade
+        - descricao
+        - valor_hora
+        - password
+        - password_confirmation
+      properties:
+        nome:
+          type: string
+          description: Nome do professor
+          minLength: 3
+          maxLength: 100
+          example: João da Silva
+        email:
+          type: string
+          description: Email do professor
+          maxLength: 255
+          format: email
+        idade:
+          type: integer
+          description: Idade do professor
+          minimum: 18
+          maximum: 100
+          example: 30
+        descricao:
+          type: string
+          description: Descrição do professor
+          minLength: 10
+          maxLength: 500
+          example: Professor de matemática
+        valor_hora:
+          type: number
+          description: Valor da hora/aula do professor
+          format: float
+          minimum: 10
+          maximum: 500
+          example: 50.5
+        password:
+          type: string
+          description: Senha do professor
+          format: password
+          minLength: 6
+          maxLength: 255
+          example: senha@123
+        password_confirmation:
+          type: string
+          description: Confirmação da senha do professor
+          format: password
+          minLength: 6
+          maxLength: 255
+          example: senha@123
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          description: Token de atualização
+          example: 303Xs5g4co7glr4xtJHXHvbNI4Pl0y1hgyZZWOENHMx
+      required:
+        - refresh_token
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
