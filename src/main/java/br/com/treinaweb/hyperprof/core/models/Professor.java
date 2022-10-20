@@ -1,7 +1,6 @@
 package br.com.treinaweb.hyperprof.core.models;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,8 +20,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Table(name = "professores")
 @ToString(onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Professor {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Professor extends Auditable {
 
     @Id
     @ToString.Include
@@ -51,11 +50,5 @@ public class Professor {
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
 }
