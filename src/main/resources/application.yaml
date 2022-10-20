@@ -1,0 +1,10 @@
+spring:
+  flyway:
+    enabled: true
+  web:
+    locale: pt_BR
+  profiles:
+    active: ${HYPERPROF_PROFILE:dev}
+  jpa:
+    hibernate:
+      ddl-auto: none

@@ -1,0 +1,11 @@
+server:
+  port: ${HYPERPROF_PORT}
+spring:
+  datasource:
+    username: ${HYPERPROF_DB_USER}
+    password: ${HYPERPROF_DB_PASSWORD}
+    url: jdbc:mysql://${HYPERPROF_DB_HOST}:${HYPERPROF_DB_PORT}/${HYPERPROF_DB_NAME}?serverTimezone=UTC
+  jpa:
+    show-sql: false
+    properties:
+      "[format_sql]": false
