@@ -3,9 +3,12 @@ package br.com.treinaweb.hyperprof.core.services.token.providers.jjwt;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
+import br.com.treinaweb.hyperprof.core.models.TokenInvalido;
+import br.com.treinaweb.hyperprof.core.repositories.TokenInvalidoRepository;
 import br.com.treinaweb.hyperprof.core.services.token.TokenService;
 import br.com.treinaweb.hyperprof.core.services.token.TokenServiceException;
 import io.jsonwebtoken.Claims;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class JjwtTokenService implements TokenService {
 
     private final JjwtConfigProperties configProperties;
+    private final TokenInvalidoRepository tokenInvalidoRepository;
 
     @Override
     public String gerarAccessToken(String subject) {
@@ -50,8 +54,10 @@ public class JjwtTokenService implements TokenService {
 
     @Override
     public void invalidarTokens(String... tokens) {
-        // TODO Auto-generated method stub
-
+        var tokensInvalidos = Stream.of(tokens)
+            .map(token -> TokenInvalido.builder().token(token).build())
+            .toList();
+        tokenInvalidoRepository.saveAll(tokensInvalidos);
     }
 
     private String gerarToken(String subject, Long expirationInSeconds, String siginKey) {
@@ -75,6 +81,9 @@ public class JjwtTokenService implements TokenService {
     }
 
     private Claims tryGetClaims(String token, String sigingKey) {
+        if (tokenInvalidoRepository.existsByToken(token)) {
+            throw new TokenServiceException("Token inválido");
+        }
         return Jwts.parserBuilder()
             .setSigningKey(Keys.hmacShaKeyFor(sigingKey.getBytes()))
             .build()
