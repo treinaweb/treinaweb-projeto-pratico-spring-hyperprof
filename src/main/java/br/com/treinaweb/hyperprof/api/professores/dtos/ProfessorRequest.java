@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import br.com.treinaweb.hyperprof.api.professores.validators.ProfessorEmailIsUnique;
+import br.com.treinaweb.hyperprof.core.validators.FieldsAreEquals;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(SnakeCaseStrategy.class)
+@FieldsAreEquals(field = "password", fieldMatch = "passwordConfirmation")
 public class ProfessorRequest {
 
     @NotNull
