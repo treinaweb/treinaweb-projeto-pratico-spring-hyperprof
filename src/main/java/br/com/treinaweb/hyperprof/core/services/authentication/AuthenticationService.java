@@ -1,4 +1,4 @@
-package br.com.treinaweb.hyperprof.core.services;
+package br.com.treinaweb.hyperprof.core.services.authentication;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
