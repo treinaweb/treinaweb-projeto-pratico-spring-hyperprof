@@ -2,6 +2,7 @@ package br.com.treinaweb.hyperprof.api.professores.mappers;
 
 import org.springframework.stereotype.Component;
 
+import br.com.treinaweb.hyperprof.api.professores.dtos.ProfessorRequest;
 import br.com.treinaweb.hyperprof.api.professores.dtos.ProfessorResponse;
 import br.com.treinaweb.hyperprof.core.models.Professor;
 
@@ -24,6 +25,22 @@ public class ProfessorMapperImpl implements ProfessorMapper {
             .fotoPerfil(professor.getFotoPerfil())
             .createdAt(professor.getCreatedAt())
             .updatedAt(professor.getUpdatedAt())
+            .build();
+    }
+
+    @Override
+    public Professor toProfessor(ProfessorRequest professorRequest) {
+        if (professorRequest == null) {
+            return null;
+        }
+
+        return Professor.builder()
+            .nome(professorRequest.getNome())
+            .email(professorRequest.getEmail())
+            .idade(professorRequest.getIdade())
+            .descricao(professorRequest.getDescricao())
+            .valorHora(professorRequest.getValorHora())
+            .password(professorRequest.getPassword())
             .build();
     }
 
