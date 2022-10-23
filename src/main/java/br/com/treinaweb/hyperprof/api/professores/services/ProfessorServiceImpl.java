@@ -2,6 +2,7 @@ package br.com.treinaweb.hyperprof.api.professores.services;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.treinaweb.hyperprof.api.professores.dtos.ProfessorRequest;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class ProfessorServiceImpl implements ProfessorService {
 
     private final ProfessorMapper professorMapper;
+    private final PasswordEncoder passwordEncoder;
     private final ProfessorRepository professorRepository;
 
     @Override
@@ -36,6 +38,7 @@ public class ProfessorServiceImpl implements ProfessorService {
     @Override
     public ProfessorResponse cadastrarProfessor(ProfessorRequest professorRequest) {
         var professorParaCadastrar = professorMapper.toProfessor(professorRequest);
+        professorParaCadastrar.setPassword(passwordEncoder.encode(professorParaCadastrar.getPassword()));
         var professorCadastrado = professorRepository.save(professorParaCadastrar);
         return professorMapper.toProfessorResponse(professorCadastrado);
     }
