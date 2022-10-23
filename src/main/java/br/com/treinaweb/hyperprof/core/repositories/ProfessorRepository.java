@@ -8,6 +8,7 @@ import br.com.treinaweb.hyperprof.core.models.Professor;
 
 public interface ProfessorRepository extends JpaRepository<Professor, Long> {
 
+    boolean existsByEmail(String email);
     List<Professor> findByDescricaoContaining(String descricao);
 
 }

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import br.com.treinaweb.hyperprof.api.professores.validators.ProfessorEmailIsUnique;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -31,6 +32,7 @@ public class ProfessorRequest {
     @Email
     @NotNull
     @NotEmpty
+    @ProfessorEmailIsUnique
     @Size(min = 3, max = 255)
     private String email;
 
