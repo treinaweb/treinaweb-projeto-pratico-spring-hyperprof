@@ -9,7 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.treinaweb.hyperprof.api.common.filters.AccessTokenRequestFilter;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final AccessTokenRequestFilter accessTokenRequestFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,6 +34,7 @@ public class SecurityConfig {
             .sessionManagement(customizer -> customizer
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+            .addFilterBefore(accessTokenRequestFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(customizer -> customizer
                 .authenticationEntryPoint(authenticationEntryPoint)
             );
