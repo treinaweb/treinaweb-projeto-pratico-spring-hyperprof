@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import br.com.treinaweb.hyperprof.api.common.dtos.ErrorResponse;
 import br.com.treinaweb.hyperprof.api.common.dtos.ValidationErrorResponse;
 import br.com.treinaweb.hyperprof.core.exceptions.ModelNotFoundException;
+import br.com.treinaweb.hyperprof.core.services.token.TokenServiceException;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandler extends ResponseEntityExceptionHandler {
@@ -33,6 +34,21 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
         ModelNotFoundException exception, WebRequest request
     ) {
         var status = HttpStatus.NOT_FOUND;
+        var body = ErrorResponse.builder()
+            .status(status.value())
+            .error(status.getReasonPhrase())
+            .message(exception.getLocalizedMessage())
+            .cause(exception.getClass().getSimpleName())
+            .timestamp(LocalDateTime.now())
+            .build();
+        return new ResponseEntity<ErrorResponse>(body, status);
+    }
+
+    @ExceptionHandler(TokenServiceException.class)
+    public ResponseEntity<ErrorResponse> handleTokenServiceException(
+        TokenServiceException exception, WebRequest request
+    ) {
+        var status = HttpStatus.UNAUTHORIZED;
         var body = ErrorResponse.builder()
             .status(status.value())
             .error(status.getReasonPhrase())

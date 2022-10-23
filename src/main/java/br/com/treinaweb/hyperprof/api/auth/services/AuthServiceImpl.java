@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 
 import br.com.treinaweb.hyperprof.api.auth.dtos.LoginRequest;
 import br.com.treinaweb.hyperprof.api.auth.dtos.LoginResponse;
+import br.com.treinaweb.hyperprof.api.auth.dtos.RefreshRequest;
+import br.com.treinaweb.hyperprof.core.exceptions.ProfessorNotFoundException;
 import br.com.treinaweb.hyperprof.core.models.AuthenticatedUser;
+import br.com.treinaweb.hyperprof.core.repositories.ProfessorRepository;
 import br.com.treinaweb.hyperprof.core.services.token.TokenService;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthServiceImpl implements AuthService {
 
     private final TokenService tokenService;
+    private final ProfessorRepository professorRepository;
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -28,6 +32,18 @@ public class AuthServiceImpl implements AuthService {
         return LoginResponse.builder()
             .token(tokenService.gerarAccessToken(professor.getEmail()))
             .refreshToken(tokenService.gerarRefreshToken(professor.getEmail()))
+            .build();
+    }
+
+    @Override
+    public LoginResponse refresh(RefreshRequest refreshRequest) {
+        var subject = tokenService.getSubjectDoRefreshToken(refreshRequest.getRefreshToken());
+        if (!professorRepository.existsByEmail(subject)) {
+            throw new ProfessorNotFoundException();
+        }
+        return LoginResponse.builder()
+            .token(tokenService.gerarAccessToken(subject))
+            .refreshToken(tokenService.gerarRefreshToken(subject))
             .build();
     }
 
