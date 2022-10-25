@@ -1,7 +1,7 @@
 package br.com.treinaweb.hyperprof.api.common.dtos;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -20,6 +20,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = false)
 public class ValidationErrorResponse extends ErrorResponse {
 
-    private Map<String, List<String>> errors;
+    private Map<String, Set<String>> errors;
 
 }
