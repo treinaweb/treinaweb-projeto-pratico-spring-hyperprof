@@ -21,6 +21,7 @@ public class ApiRoutes {
     public static final String BUSCAR_PROFESSORES = API + PROFESSORES;
     public static final String CADASTRAR_PROFESSOR = API + PROFESSORES;
     public static final String ATUALIZAR_PROFESSOR_LOGADO = API + PROFESSORES;
+    public static final String ATUALIZAR_FOTO_PROFESSOR_LOGADO = API + PROFESSORES + "/foto";
     public static final String BUSCAR_PROFESSOR_POR_ID = API + PROFESSORES + "/{professorId}";
 
     public static final String CADASTRAR_ALUNO = API + PROFESSORES + "/{professorId}" + ALUNOS;
