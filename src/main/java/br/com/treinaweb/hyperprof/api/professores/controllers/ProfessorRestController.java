@@ -3,9 +3,11 @@ package br.com.treinaweb.hyperprof.api.professores.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,6 +44,14 @@ public class ProfessorRestController {
         @RequestBody @Valid ProfessorRequest professorRequest
     ) {
         return professorService.cadastrarProfessor(professorRequest);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping(ApiRoutes.ATUALIZAR_PROFESSOR_LOGADO)
+    public ProfessorResponse atualizarProfessorLogado(
+        @RequestBody @Valid ProfessorRequest professorRequest
+    ) {
+        return professorService.atualizarProfessorLogado(professorRequest);
     }
 
 }
