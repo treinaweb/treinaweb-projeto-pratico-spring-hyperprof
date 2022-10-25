@@ -9,3 +9,21 @@ spring:
     show-sql: false
     properties:
       "[format_sql]": false
+br:
+  com:
+    treinaweb:
+      hyperprof:
+        core:
+          services:
+            token:
+              jjwt:
+                accessTokenSigingKey: ${HYPERPROF_JJWT_ACCESS_TOKEN_SIGING_KEY}
+                accessTokenExpirationInSeconds: ${HYPERPROF_JJWT_ACCESS_TOKEN_EXPIRATION_IN_SECONDS}
+                refreshTokenSigingKey: ${HYPERPROF_JJWT_REFRESH_TOKEN_SIGING_KEY}
+                refreshTokenExpirationInSeconds: ${HYPERPROF_JJWT_REFRESH_TOKEN_EXPIRATION_IN_SECONDS}
+            storage:
+              s3:
+                accessKey: ${HYPERPROF_S3_ACCESS_KEY}
+                secretKey: ${HYPERPROF_S3_SECRET_KEY}
+                bucketName: ${HYPERPROF_S3_BUCKET_NAME}
+                region: ${HYPERPROF_S3_REGION}
