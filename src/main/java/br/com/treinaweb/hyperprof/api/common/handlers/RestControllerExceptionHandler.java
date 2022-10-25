@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
 import br.com.treinaweb.hyperprof.api.common.dtos.ErrorResponse;
 import br.com.treinaweb.hyperprof.api.common.dtos.ValidationErrorResponse;
 import br.com.treinaweb.hyperprof.core.exceptions.ModelNotFoundException;
+import br.com.treinaweb.hyperprof.core.services.storage.StorageServiceException;
 import br.com.treinaweb.hyperprof.core.services.token.TokenServiceException;
 
 @RestControllerAdvice
@@ -49,6 +50,21 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
         TokenServiceException exception, WebRequest request
     ) {
         var status = HttpStatus.UNAUTHORIZED;
+        var body = ErrorResponse.builder()
+            .status(status.value())
+            .error(status.getReasonPhrase())
+            .message(exception.getLocalizedMessage())
+            .cause(exception.getClass().getSimpleName())
+            .timestamp(LocalDateTime.now())
+            .build();
+        return new ResponseEntity<ErrorResponse>(body, status);
+    }
+
+    @ExceptionHandler(StorageServiceException.class)
+    public ResponseEntity<ErrorResponse> handleStorageServiceException(
+        StorageServiceException exception, WebRequest request
+    ) {
+        var status = HttpStatus.INTERNAL_SERVER_ERROR;
         var body = ErrorResponse.builder()
             .status(status.value())
             .error(status.getReasonPhrase())

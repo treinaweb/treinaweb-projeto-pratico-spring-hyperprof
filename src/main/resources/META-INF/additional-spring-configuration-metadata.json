@@ -1,24 +1,42 @@
-{
-  "properties": [
-    {
-      "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.accessTokenSigingKey",
-      "type": "java.lang.String",
-      "description": "Signing key for JWT access tokens"
-    },
-    {
-      "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.accessTokenExpirationInSeconds",
-      "type": "java.lang.Long",
-      "description": "Expiration time in seconds for JWT access tokens"
-    },
-    {
-      "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.refreshTokenSigingKey",
-      "type": "java.lang.String",
-      "description": "Signing key for JWT refresh tokens"
-    },
-    {
-      "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.refreshTokenExpirationInSeconds",
-      "type": "java.lang.Long",
-      "description": "Expiration time in seconds for JWT refresh tokens"
-    }
-  ]
-}
+{"properties": [
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.accessTokenSigingKey",
+    "type": "java.lang.String",
+    "description": "Signing key for JWT access tokens"
+  },
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.accessTokenExpirationInSeconds",
+    "type": "java.lang.Long",
+    "description": "Expiration time in seconds for JWT access tokens"
+  },
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.refreshTokenSigingKey",
+    "type": "java.lang.String",
+    "description": "Signing key for JWT refresh tokens"
+  },
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.token.jjwt.refreshTokenExpirationInSeconds",
+    "type": "java.lang.Long",
+    "description": "Expiration time in seconds for JWT refresh tokens"
+  },
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.storage.s3.accessKey",
+    "type": "java.lang.String",
+    "description": "Access key for S3 storage"
+  },
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.storage.s3.secretKey",
+    "type": "java.lang.String",
+    "description": "Secret key for S3 storage"
+  },
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.storage.s3.bucketName",
+    "type": "java.lang.String",
+    "description": "Bucket name for S3 storage"
+  },
+  {
+    "name": "br.com.treinaweb.hyperprof.core.services.storage.s3.region",
+    "type": "com.amazonaws.regions.Regions",
+    "description": "Region fro S3 storage"
+  }
+]}
